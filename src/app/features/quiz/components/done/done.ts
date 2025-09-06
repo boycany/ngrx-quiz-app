@@ -1,5 +1,5 @@
 import { PercentPipe } from '@angular/common';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-done',
@@ -8,8 +8,8 @@ import { Component, computed, effect, signal } from '@angular/core';
   styleUrl: './done.scss',
 })
 export class Done {
-  readonly correct = signal(4);
-  readonly total = signal(9);
+  readonly correct = input.required<number>();
+  readonly total = input.required<number>();
   readonly score = computed(() => this.correct() / this.total());
   scoreEff = effect(() => console.log('this.score() :>> ', this.score()));
 }

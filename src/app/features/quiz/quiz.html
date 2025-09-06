@@ -1,5 +1,5 @@
 <app-toolbar caption="Colors Quiz" icon="palette">
-  <button matIconButton matTooltip="Reset Quiz">
+  <button matIconButton matTooltip="Reset Quiz" (click)="onResetQuiz()">
     <mat-icon>restart_alt</mat-icon>
   </button>
   <button matIconButton matTooltip="Generate New Quiz">
@@ -7,8 +7,10 @@
   </button>
 </app-toolbar>
 <div class="main">
-  <app-question-presenter></app-question-presenter>
-  <!-- <p>{{ store.questions() | json }}</p> -->
-  <app-progress [value]="4" [max]="9"></app-progress>
-  <app-done></app-done>
+  <app-progress [value]="completedCount()" [max]="questionsCount()" />
+  @if (isDone()) {
+    <app-done [correct]="correctCount()" [total]="questionsCount()" />
+  } @else {
+    <app-question-presenter />
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Toolbar } from '../../components/toolbar/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,5 +25,15 @@ import { QuestionPresenter } from './components/question-presenter/question-pres
   styleUrl: './quiz.scss',
 })
 export class Quiz {
-  readonly store = inject(QuizStore);
+  private store = inject(QuizStore);
+
+  //progress
+  completedCount = this.store.currentQuestionIndex;
+  questionsCount = this.store.questionsCount;
+  isDone = this.store.isDone;
+  correctCount = this.store.correctCount;
+
+  onResetQuiz() {
+    this.store.resetQuiz();
+  }
 }

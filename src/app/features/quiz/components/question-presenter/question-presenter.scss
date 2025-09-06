@@ -49,6 +49,10 @@
         color: var(--n-on-surface);
         flex-grow: 1;
       }
+
+      .caption:hover {
+        background-color: var(--s-95);
+      }
     }
   }
 }
