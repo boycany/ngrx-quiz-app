@@ -1,7 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { QuizStore } from '../../store/quiz.store';
 
 @Component({
   selector: 'app-toolbar',

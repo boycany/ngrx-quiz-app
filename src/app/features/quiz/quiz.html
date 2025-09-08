@@ -7,10 +7,10 @@
   </button>
 </app-toolbar>
 <div class="main">
-  <app-progress [value]="completedCount()" [max]="questionsCount()" />
   @if (isDone()) {
     <app-done [correct]="correctCount()" [total]="questionsCount()" />
   } @else {
+    <app-progress [value]="completedCount()" [max]="questionsCount()" />
     <app-question-presenter />
   }
 </div>

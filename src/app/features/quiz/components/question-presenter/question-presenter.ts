@@ -13,12 +13,12 @@ import { patchState } from '@ngrx/signals';
 export class QuestionPresenter {
   readonly store = inject(QuizStore);
   readonly question = this.store.currentQuestion;
-  questionEff = effect(() =>
-    console.log('this.question() :>> ', this.question()),
+  correctAnswerEff = effect(() =>
+    console.log('correctIndex :>> ', this.question().correctIndex),
   );
 
   onSelectAnswer(index: number) {
-    console.log('index :>> ', index);
+    console.log('selectedindex :>> ', index);
     this.store.addAnswer(index);
 
     /** after ngrx v18, protectedState default set to be true

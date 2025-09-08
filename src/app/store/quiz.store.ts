@@ -1,13 +1,16 @@
 import {
+  getState,
   patchState,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { initialQuizSlice } from './quiz.slice';
-import { computed } from '@angular/core';
+import { computed, effect } from '@angular/core';
 import { addAnswer, resetQuiz } from './quiz.updaters';
+import { getCorrectCount } from './quiz.helper';
 
 export const QuizStore = signalStore(
   {
@@ -25,12 +28,9 @@ export const QuizStore = signalStore(
       () => currentQuestionIndex() >= store.questions().length,
     );
     const questionsCount = computed(() => store.questions().length);
-    const correctCount = computed(() => {
-      return store.answers().reduce((acc, answer, index) => {
-        const correctIndex = store.questions()[index].correctIndex;
-        return acc + (answer === correctIndex ? 1 : 0);
-      }, 0);
-    });
+    const correctCount = computed(() =>
+      getCorrectCount(store.answers(), store.questions()),
+    );
     return {
       currentQuestionIndex,
       isDone,
@@ -42,5 +42,22 @@ export const QuizStore = signalStore(
   withMethods((store) => ({
     addAnswer: (index: number) => patchState(store, addAnswer(index)),
     resetQuiz: () => patchState(store, resetQuiz()),
+  })),
+  withHooks((store) => ({
+    onInit: () => {
+      const stateJson = localStorage.getItem('quiz');
+      if (stateJson) {
+        const state = JSON.parse(stateJson);
+        patchState(store, state);
+      }
+
+      effect(() => {
+        const state = getState(store);
+        console.log('state :>> ', state);
+
+        const stateJson = JSON.stringify(state);
+        localStorage.setItem('quiz', stateJson);
+      });
+    },
   })),
 );

@@ -1,9 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { patchState, signalState } from '@ngrx/signals';
-import { Quiz } from './features/quiz/quiz';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { QuizStore } from './store/quiz.store';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
