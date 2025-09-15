@@ -1,4 +1,5 @@
 <app-toolbar caption="Colors Quiz" icon="palette">
+  <app-flag [of]="selectedLanguage()" (click)="onLanguageChange()"></app-flag>
   <button matIconButton matTooltip="Reset Quiz" (click)="onResetQuiz()">
     <mat-icon>restart_alt</mat-icon>
   </button>

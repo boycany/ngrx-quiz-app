@@ -13,11 +13,11 @@ import { addAnswer, resetQuiz } from './quiz.updaters';
 import { getCorrectCount } from './quiz.helper';
 
 export const QuizStore = signalStore(
-  {
-    providedIn: 'root',
-    // protectedState: false,
-    // Default is 'true' to prevent someone from outside modifying the state
-  },
+  // {
+  //   providedIn: 'root',
+  //   // protectedState: false,
+  //   // Default is 'true' to prevent someone from outside modifying the state
+  // },
   withState(initialQuizSlice),
   withComputed((store) => {
     const currentQuestionIndex = computed(() => store.answers().length);
@@ -45,6 +45,8 @@ export const QuizStore = signalStore(
   })),
   withHooks((store) => ({
     onInit: () => {
+      console.log('QuizStore initialized');
+
       const stateJson = localStorage.getItem('quiz');
       if (stateJson) {
         const state = JSON.parse(stateJson);
@@ -58,6 +60,10 @@ export const QuizStore = signalStore(
         const stateJson = JSON.stringify(state);
         localStorage.setItem('quiz', stateJson);
       });
+    },
+
+    onDestroy: () => {
+      console.log('QuizStore destroyed');
     },
   })),
 );

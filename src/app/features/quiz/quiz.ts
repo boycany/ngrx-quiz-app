@@ -6,8 +6,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Progress } from '../../components/progress/progress';
 import { Done } from './components/done/done';
 import { JsonPipe } from '@angular/common';
-import { QuizStore } from '../../store/quiz.store';
+import { QuizStore } from './store/quiz.store';
 import { QuestionPresenter } from './components/question-presenter/question-presenter';
+import { Flag } from '../../components/flag/flag';
+import { AppStore } from '../../store/app.store';
 
 @Component({
   selector: 'app-quiz',
@@ -20,11 +22,16 @@ import { QuestionPresenter } from './components/question-presenter/question-pres
     Done,
     // JsonPipe,
     QuestionPresenter,
+    Flag,
   ],
   templateUrl: './quiz.html',
   styleUrl: './quiz.scss',
+  // providers: [QuizStore],
 })
 export class Quiz {
+  private appStore = inject(AppStore);
+  selectedLanguage = this.appStore.selectedLanguage;
+
   private store = inject(QuizStore);
 
   //progress
@@ -35,5 +42,9 @@ export class Quiz {
 
   onResetQuiz() {
     this.store.resetQuiz();
+  }
+
+  onLanguageChange() {
+    this.appStore.changeLanguage();
   }
 }

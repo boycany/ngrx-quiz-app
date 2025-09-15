@@ -1,4 +1,4 @@
-import { Question } from '../models/question.model';
+import { Question } from '../../../models/question.model';
 
 export function getCorrectCount(answers: number[], questions: Question[]) {
   return answers.reduce((acc, answer, index) => {
