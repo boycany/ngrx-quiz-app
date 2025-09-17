@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, input } from '@angular/core';
 
 @Component({
   selector: 'app-flag',
@@ -8,5 +8,6 @@ import { Component, computed, input } from '@angular/core';
 })
 export class Flag {
   readonly of = input.required<string>();
+  ofEff = effect(() => console.log('this.of() :>> ', this.of()));
   readonly imageUrl = computed(() => `images/lang/${this.of()}.svg`);
 }

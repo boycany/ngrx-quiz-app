@@ -4,40 +4,36 @@ import {
   withComputed,
   withHooks,
   withMethods,
+  withProps,
   withState,
 } from '@ngrx/signals';
 import { initialAppState } from './app.state';
 import { computed, inject } from '@angular/core';
 import { DICTIONARIES_TOKEN } from '../tokens/dictionaries.token';
-import { changeLanguage } from './app.updaters';
+import { changeLanguage, resetLanguage } from './app.updaters';
 import { getDictionary } from './app.helpers';
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialAppState),
-  withComputed((store) => {
-    const dictionaries = inject(DICTIONARIES_TOKEN);
-    return {
-      selectedDictionary: computed(() =>
-        getDictionary(store.selectedLanguage(), dictionaries),
-      ),
-    };
+  withProps((_) => {
+    const _dictionaries = inject(DICTIONARIES_TOKEN);
+    const _languages = Object.keys(_dictionaries);
+    return { _languages, _dictionaries };
   }),
-  withMethods((store) => {
-    const dictionaries = inject(DICTIONARIES_TOKEN);
-    const languages = Object.keys(dictionaries);
-    return {
-      changeLanguage: () => patchState(store, changeLanguage(languages)),
-    };
-  }),
+  withComputed((store) => ({
+    selectedDictionary: computed(() =>
+      getDictionary(store.selectedLanguage(), store._dictionaries),
+    ),
+  })),
+  withMethods((store) => ({
+    changeLanguage: () => patchState(store, changeLanguage(store._languages)),
+    _resetLanguage: () => patchState(store, resetLanguage(store._languages)),
+    // add underline to indicate this method is private
+  })),
   withHooks((store) => ({
     onInit: () => {
-      const dictionaries = inject(DICTIONARIES_TOKEN);
-      const languages = Object.keys(dictionaries);
-      patchState(store, {
-        possibleLanguages: languages,
-        selectedLanguage: languages[0],
-      });
+      store._resetLanguage();
     },
   })),
 );
