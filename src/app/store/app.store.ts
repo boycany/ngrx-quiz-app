@@ -43,6 +43,13 @@ export const AppStore = signalStore(
 
     return {
       changeLanguage: async () => {
+        // Prevent changing language when we are already busy
+        if (store.isBusy()) {
+          console.warn(
+            'Change language request ignored because store is busy.',
+          );
+          return;
+        }
         patchState(store, changeLanguage(store._languages));
         await _invalidateDictionary();
       },
