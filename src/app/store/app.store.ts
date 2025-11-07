@@ -8,7 +8,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { initialAppState } from './app.state';
-import { computed, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import {
   changeLanguage,
   resetLanguage,
@@ -16,7 +16,8 @@ import {
   setDictionary,
 } from './app.updaters';
 import { Dictionaries } from '../services/dictionaries';
-import { firstValueFrom } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
@@ -30,19 +31,24 @@ export const AppStore = signalStore(
   withMethods((store) => {
     // Simulate fetching Dictionary from api
     // GET /dictionary?lang=xx at initial load or when language changes
-    const _invalidateDictionary = async () => {
-      patchState(store, setBusy(true));
-      const dictionary = await firstValueFrom(
-        store._dictionariesService.getDictionaryWithDelay(
-          store.selectedLanguage(),
-        ),
-      );
-      console.log('dictionary :>> ', dictionary);
-      patchState(store, setBusy(false), setDictionary(dictionary));
-    };
+    const _invalidateDictionary = rxMethod<string>((input$) =>
+      input$.pipe(
+        tap((lang) => {
+          console.log('invalidate dictionary for language:', lang);
+          patchState(store, setBusy(true));
+        }),
+        switchMap((lang) => {
+          return store._dictionariesService.getDictionaryWithDelay(lang);
+        }),
+        tap((dictionary) => {
+          console.log('result when completed dictionary fetch:', dictionary);
+          patchState(store, setBusy(false), setDictionary(dictionary));
+        }),
+      ),
+    );
 
     return {
-      changeLanguage: async () => {
+      changeLanguage: () => {
         // Prevent changing language when we are already busy
         if (store.isBusy()) {
           console.warn(
@@ -51,11 +57,11 @@ export const AppStore = signalStore(
           return;
         }
         patchState(store, changeLanguage(store._languages));
-        await _invalidateDictionary();
+        _invalidateDictionary(store.selectedLanguage());
       },
-      _resetLanguage: async () => {
+      _resetLanguage: () => {
         patchState(store, resetLanguage(store._languages));
-        await _invalidateDictionary();
+        _invalidateDictionary(store.selectedLanguage());
       },
       _invalidateDictionary,
       // add underline to indicate this method is private
