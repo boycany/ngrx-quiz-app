@@ -1,5 +1,6 @@
 import { PartialStateUpdater } from '@ngrx/signals';
 import { AppState } from './app.state';
+import { Dictionary } from '../data/dictionaries';
 
 export function changeLanguage(
   languages: string[],
@@ -18,5 +19,19 @@ export function resetLanguage(
   return (_) => ({
     possibleLanguages: languages,
     selectedLanguage: languages[0],
+  });
+}
+
+export function setBusy(isBusy: boolean): PartialStateUpdater<AppState> {
+  return (_) => ({
+    isBusy,
+  });
+}
+
+export function setDictionary(
+  dictionary: Dictionary,
+): PartialStateUpdater<AppState> {
+  return (_) => ({
+    selectedDictionary: dictionary,
   });
 }

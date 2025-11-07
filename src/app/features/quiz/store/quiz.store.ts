@@ -8,7 +8,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { initialQuizSlice } from './quiz.slice';
-import { computed, effect, inject } from '@angular/core';
+import { computed, effect, inject, Signal } from '@angular/core';
 import { addAnswer, resetQuiz } from './quiz.updaters';
 import { getCorrectCount } from './quiz.helper';
 import { AppStore } from '../../../store/app.store';

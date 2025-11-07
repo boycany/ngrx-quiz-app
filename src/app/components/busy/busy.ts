@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-busy',
-  imports: [],
+  imports: [MatProgressSpinnerModule],
   templateUrl: './busy.html',
-  styleUrl: './busy.scss'
+  styleUrl: './busy.scss',
 })
-export class Busy {
-
-}
+export class Busy {}
