@@ -31,6 +31,7 @@ export const AppStore = signalStore(
   withMethods((store) => {
     // Simulate fetching Dictionary from api
     // GET /dictionary?lang=xx at initial load or when language changes
+    // the type string means the input type of the method
     const _invalidateDictionary = rxMethod<string>((input$) =>
       input$.pipe(
         tap((lang) => {
