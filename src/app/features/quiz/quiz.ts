@@ -10,6 +10,7 @@ import { QuizStore } from './store/quiz.store';
 import { QuestionPresenter } from './components/question-presenter/question-presenter';
 import { Flag } from '../../components/flag/flag';
 import { AppStore } from '../../store/app.store';
+import { Busy } from '../../components/busy/busy';
 
 @Component({
   selector: 'app-quiz',
@@ -20,6 +21,7 @@ import { AppStore } from '../../store/app.store';
     MatTooltipModule,
     Progress,
     Done,
+    Busy,
     // JsonPipe,
     QuestionPresenter,
     Flag,
@@ -29,22 +31,6 @@ import { AppStore } from '../../store/app.store';
   // providers: [QuizStore],
 })
 export class Quiz {
-  private appStore = inject(AppStore);
-  selectedLanguage = this.appStore.selectedLanguage;
-
-  private store = inject(QuizStore);
-
-  //progress
-  completedCount = this.store.currentQuestionIndex;
-  questionsCount = this.store.questionsCount;
-  isDone = this.store.isDone;
-  correctCount = this.store.correctCount;
-
-  onResetQuiz() {
-    this.store.resetQuiz();
-  }
-
-  onLanguageChange() {
-    this.appStore.changeLanguage();
-  }
+  readonly appStore = inject(AppStore);
+  readonly store = inject(QuizStore);
 }
