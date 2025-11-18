@@ -21,6 +21,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { ColorQuizGenerator } from '../services/color-quiz-generator';
 import { NotificationsService } from '../services/notifications-service';
 import { tapResponse } from '@ngrx/operators';
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
@@ -97,4 +98,5 @@ export const AppStore = signalStore(
       store._resetLanguage();
     },
   })),
+  withDevtools('app'),
 );

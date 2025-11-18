@@ -23,6 +23,7 @@ import { ColorQuizGenerator } from '../../../services/color-quiz-generator';
 import { exhaustAll, generate, map, switchAll, tap } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Question } from '../../../models/question.model';
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
 
 export const QuizStore = signalStore(
   // {
@@ -112,4 +113,5 @@ export const QuizStore = signalStore(
       console.log('QuizStore destroyed');
     },
   })),
+  withDevtools('quiz'),
 );
