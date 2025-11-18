@@ -13,6 +13,13 @@
   >
     <mat-icon>auto_fix_high</mat-icon>
   </button>
+  <button
+    matIconButton
+    matTooltip="Navigate to Books"
+    (click)="navigateToBooksPage()"
+  >
+    <mat-icon>menu_book</mat-icon>
+  </button>
 </app-toolbar>
 <div class="main">
   @if (store.isBusy()) {
