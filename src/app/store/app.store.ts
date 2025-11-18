@@ -49,9 +49,9 @@ export const AppStore = signalStore(
             // Each one of the inner observables return single value and then complete, that means we can setBusy in finalize instead of next and error separately
             tapResponse({
               next: (dict) => {
-                store._notifications.success(
-                  `Loaded dictionary for language: ${lang}`,
-                );
+                // store._notifications.success(
+                //   `Loaded dictionary for language: ${lang}`,
+                // );
                 patchState(store, setDictionary(dict));
               },
               error: (error) => store._notifications.error(`${error}`),

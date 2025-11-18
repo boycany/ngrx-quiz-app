@@ -1,6 +1,7 @@
 :host {
   position: absolute;
-  top: 80px;
+  // top: 80px;
+  top: 0;
   bottom: 0;
   inset-inline-start: 0; // for left in ltr and right in rtl, like "left: 0", but better
   inset-inline-end: 0; // for right in ltr and left in rtl, like "right: 0", but better

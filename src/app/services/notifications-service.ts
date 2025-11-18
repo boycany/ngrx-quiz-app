@@ -19,7 +19,7 @@ export class NotificationsService {
     message: string,
     action: string,
     className = '',
-    duration = 50000,
+    duration = 5000,
   ) {
     this.snackbar.open(message, action, {
       duration,

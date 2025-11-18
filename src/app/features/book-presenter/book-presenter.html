@@ -1,0 +1,13 @@
+<button matIconButton matTooltip="Back to Quiz" (click)="navigateToQuizPage()">
+  <mat-icon>arrow_back</mat-icon>
+</button>
+<div class="toolbar">
+  <button (click)="previous()">Previous</button>
+  <button (click)="next()">Next</button>
+</div>
+<div class="book">
+  @let book = store.book();
+  <h1>{{ book.title }}</h1>
+  <h2>{{ book.author }}</h2>
+  <p>{{ book.description }}</p>
+</div>
