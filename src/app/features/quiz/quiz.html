@@ -22,7 +22,7 @@
   </button>
 </app-toolbar>
 <div class="main">
-  @if (store.isBusy()) {
+  @if (store.isLoading()) {
     <app-busy />
   }
   @if (store.isDone()) {

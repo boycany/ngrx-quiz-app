@@ -9,12 +9,7 @@ import {
 } from '@ngrx/signals';
 import { initialAppState } from './app.state';
 import { inject } from '@angular/core';
-import {
-  changeLanguage,
-  resetLanguage,
-  setBusy,
-  setDictionary,
-} from './app.updaters';
+import { changeLanguage, resetLanguage, setDictionary } from './app.updaters';
 import { Dictionaries } from '../services/dictionaries';
 import { switchMap, tap } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -22,10 +17,16 @@ import { ColorQuizGenerator } from '../services/color-quiz-generator';
 import { NotificationsService } from '../services/notifications-service';
 import { tapResponse } from '@ngrx/operators';
 import { withDevtools } from '@angular-architects/ngrx-toolkit';
+import { withLoading } from '../shared/custom-features/with-loading/with-loading.feature';
+import {
+  setIdle,
+  setLoading,
+} from '../shared/custom-features/with-loading/with-loading.updaters';
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialAppState),
+  withLoading(),
   withProps((_) => {
     const _dictionariesService = inject(Dictionaries);
     const _languages = _dictionariesService.languages;
@@ -43,7 +44,7 @@ export const AppStore = signalStore(
     // the type string means the input type of the method
     const _invalidateDictionary = rxMethod<string>((input$) =>
       input$.pipe(
-        tap((_) => patchState(store, setBusy(true))),
+        tap((_) => patchState(store, setLoading())),
         switchMap((lang) => {
           return store._dictionariesService.getDictionaryWithDelay(lang).pipe(
             // use tapResponse to handle next and error cases in the inner observable and the outer observable stream won't be affected
@@ -56,7 +57,7 @@ export const AppStore = signalStore(
                 patchState(store, setDictionary(dict));
               },
               error: (error) => store._notifications.error(`${error}`),
-              finalize: () => patchState(store, setBusy(false)),
+              finalize: () => patchState(store, setIdle()),
             }),
           );
         }),
@@ -76,7 +77,7 @@ export const AppStore = signalStore(
     return {
       changeLanguage: () => {
         // Prevent changing language when we are already busy
-        if (store.isBusy()) {
+        if (store.isLoading()) {
           console.warn(
             'Change language request ignored because store is busy.',
           );
@@ -98,5 +99,5 @@ export const AppStore = signalStore(
       store._resetLanguage();
     },
   })),
-  withDevtools('app'),
+  withDevtools('app-store'),
 );

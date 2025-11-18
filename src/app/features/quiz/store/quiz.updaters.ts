@@ -22,9 +22,3 @@ export function resetQuestions(
     answers: [],
   });
 }
-
-export function setBusy(isBusy: boolean): PartialStateUpdater<QuizSlice> {
-  return (_) => ({
-    isBusy,
-  });
-}

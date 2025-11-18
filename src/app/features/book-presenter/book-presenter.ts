@@ -27,7 +27,7 @@ export class BookPresenter {
   next() {
     this.router.navigate([
       'books',
-      Math.min(this.id() + 1, BOOKS_COLLECTION.length - 1),
+      Math.min(this.id() + 1, this.store.booksEntities().length - 1),
     ]);
   }
 
