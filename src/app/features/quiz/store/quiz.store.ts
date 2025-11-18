@@ -10,7 +10,7 @@ import {
 } from '@ngrx/signals';
 import { initialQuizSlice } from './quiz.slice';
 import { computed, effect, inject, Signal } from '@angular/core';
-import { addAnswer, resetQuestions, resetQuiz, setBusy } from './quiz.updaters';
+import { addAnswer, resetQuestions, resetQuiz } from './quiz.updaters';
 import { getCorrectCount } from './quiz.helper';
 import { AppStore } from '../../../store/app.store';
 import {
@@ -23,6 +23,13 @@ import { ColorQuizGenerator } from '../../../services/color-quiz-generator';
 import { exhaustAll, generate, map, switchAll, tap } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Question } from '../../../models/question.model';
+import { withDevtools } from '@angular-architects/ngrx-toolkit';
+import { withLocalStorage } from '../../../shared/custom-features/with-local-storage.feature';
+import { withLoading } from '../../../shared/custom-features/with-loading/with-loading.feature';
+import {
+  setIdle,
+  setLoading,
+} from '../../../shared/custom-features/with-loading/with-loading.updaters';
 
 export const QuizStore = signalStore(
   // {
@@ -31,6 +38,7 @@ export const QuizStore = signalStore(
   //   // Default is 'true' to prevent someone from outside modifying the state
   // },
   withState(initialQuizSlice),
+  withLoading(),
   withProps((_) => ({
     _colorQuizGenService: inject(ColorQuizGenerator),
   })),
@@ -73,12 +81,12 @@ export const QuizStore = signalStore(
     const generateNewQuiz = rxMethod<void>((trigger$) =>
       trigger$.pipe(
         tap((trigger) => console.log('trigger :>> ', trigger)),
-        tap(() => patchState(store, setBusy(true))),
+        tap(() => patchState(store, setLoading())),
         map(() => store._colorQuizGenService.createRandomQuiz()),
         exhaustAll(), // use exhaustAll to ignore new requests while one is ongoing
         tap((questions) => console.log('questions :>> ', questions)),
         tap((questions: Question[]) =>
-          patchState(store, setBusy(false), resetQuestions(questions)),
+          patchState(store, setIdle(), resetQuestions(questions)),
         ),
       ),
     );
@@ -89,27 +97,14 @@ export const QuizStore = signalStore(
       generateNewQuiz,
     };
   }),
+  withLocalStorage('quiz-store'),
   withHooks((store) => ({
     onInit: () => {
       console.log('QuizStore initialized');
-
-      const stateJson = localStorage.getItem('quiz');
-      if (stateJson) {
-        const state = JSON.parse(stateJson);
-        patchState(store, state);
-      }
-
-      effect(() => {
-        const state = getState(store);
-        console.log('state :>> ', state);
-
-        const stateJson = JSON.stringify(state);
-        localStorage.setItem('quiz', stateJson);
-      });
     },
-
     onDestroy: () => {
       console.log('QuizStore destroyed');
     },
   })),
+  withDevtools('quiz-store'),
 );
